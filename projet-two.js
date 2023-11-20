@@ -2,57 +2,79 @@ var prompt = require("prompt-sync")();
 
 // LE SCORE DU JOUEUR
 let score = 0;
-
-// LES QUESTIONS & REPONSES
-
-const qOne =
-  "???????Question 1??????? : Quelle est la forme de la Terre ? \n \n";
-const rOne =
-  "A. Tout le monde le sait qu'elle est plate... \n" +
-  "B. En forme de sphère \n" +
-  "C. En forme de cube comme dans Minecraft \n" +
-  "D. Bleu comme une orange ! \n";
-
-const qTwo =
-  "???????Question 2??????? : Les poissons peuvent-ils respirer en dehors de l'eau ? Attention, celle-ci est un peu dure... \n \n";
-const rTwo =
-  "A. Non. \n" +
-  "B. Oui, mais pas longtemps. \n" +
-  "C. Oui, il y en a même qui vivent en dehors de l'eau en permanence.\n" +
-  "D. Non, mais avec un tubas oui. \n";
-
-const qThree =
-  "???????Question 3??????? : Poutin est-il un être humain ? \n \n";
-const rThree =
-  "A. Humain dans quel sens ? \n" +
-  "B. Non, c'est un reptilien... \n" +
-  "C. Vlad est le fils d'un ours. Donc non, c'est un ours. \n" +
-  "D. Oui, Poutin est un être humain. \n";
-
-const qFour =
-  "???????Question 4??????? : Qui est le premier à avoir marcher sur la lune ? \n \n";
-const rFour =
-  "A. Neil Young \n" +
-  "B. Neil Amstrong \n" +
-  "C. Neil Astier \n" +
-  "D. Bugs Bunny \n";
-
-const qFive =
-  "???????Question 5??????? : Quel est le symbole de la chouette ? \n \n";
-const rFive =
-  "A. La chouette est le symbole d'un code qui marche. Parce qu'un code qui marche, c'est...\n" +
-  "B. Chuck Norris est bien plus chouette qu'une chouette. \n" +
-  "C. Hedwig ??! \n" +
-  "D. La chouette est le symbole de la connaissance, de la sagesse. \n";
-
+// NOMBRE D'ERREURS
+let error = 3;
+// REPONSES POSSIBLES
+const repPoss = ["A", "B", "C", "D"];
 // WIN || LOOSE
-
-const w = " \n:::::::Bien joué camarade !:::::::: \n";
-const l = "\n::::::::Mauvaise réponse.:::::::::";
-
+const win = " \nOoOoOoOoOo Bien joué camarade ! oOoOoOoOoO \n";
+const lose = "\nXxXxXxXxXx Mauvaise réponse. xXxXxXxXxX \n";
+// LES QUESTIONS & REPONSES
+const listQuestion = [
+  {
+    name: "Question 1",
+    question: "Quelle est la forme de la Terre ?",
+    response: "A",
+    possibleResponse: [
+      "A. Tout le monde le sait qu'elle est plate...",
+      "B. En forme de sphère",
+      "C. En forme de cube comme dans Minecraft ",
+      "D. Bleu comme une orange !",
+    ],
+    goodAnswer: "A. Tout le monde le sait qu'elle est plate...",
+  },
+  {
+    name: "Question 2",
+    question:
+      "Les poissons peuvent-ils respirer en dehors de l'eau ? Attention, celle-ci est un peu dure...",
+    response: "D",
+    possibleResponse: [
+      "A. Non.",
+      "B. Oui, mais pas longtemps.",
+      "C. Oui, il y en a même qui vivent en dehors de l'eau en permanence.",
+      "D. Non, mais avec un tubas oui.",
+    ],
+    goodAnswer: "D. Non, mais avec un tubas oui.",
+  },
+  {
+    name: "Question 3",
+    question: "Poutin est-il un être humain ?",
+    response: "C",
+    possibleResponse: [
+      "A. Humain dans quel sens ?",
+      "B. Non, c'est un reptilien...",
+      "C. Vlad est le fils d'un ours. Donc non, c'est un ours.",
+      "D. Oui, Poutin est un être humain. ",
+    ],
+    goodAnswer: "C. Vlad est le fils d'un ours. Donc non, c'est un ours.",
+  },
+  {
+    name: "Question 4",
+    question: "Qui est le premier à avoir marcher sur la lune ?",
+    response: "B",
+    possibleResponse: [
+      "A. Neil Young ",
+      "B. Neil Amstrong",
+      "C. Neil Astier",
+      "D. Bugs Bunny",
+    ],
+    goodAnswer: "B. Neil Amstrong",
+  },
+  {
+    name: "Question 5",
+    question: "Quel est le symbole de la chouette ?",
+    response: "B",
+    possibleResponse: [
+      "A. La chouette est le symbole d'un code qui marche. Parce qu'un code qui marche, c'est..",
+      "B. Chuck Norris est bien plus chouette qu'une chouette.",
+      "C. Hedwig ??!",
+      "D. La chouette est le symbole de la connaissance, de la sagesse.",
+    ],
+    goodAnswer: "B. Chuck Norris est bien plus chouette qu'une chouette.",
+  },
+];
 ////////////////////////////////////////////
 // LAUNCH GAME//////////////////////////////
-
 console.log(
   "Bienvenue dans Le Quizz. \n C'est un quizz basique, vous aurez le choix entre 4 réponses." +
     " Entrez la lettre de votre réponse sans espace ni ponctuation EN MAJUSCULE sinon votre réponse sera considéré comme fausse." +
@@ -60,64 +82,37 @@ console.log(
     " De toute façon les gouvernements nous mentent et nous sommes dans un monde de mensonge." +
     " Alors bon... Moi je ne crois pas à la vérité conventionnelle. Je ne suis pas un mouton. Enfin bref, prêt à jouer ? \n"
 );
-
 // QUESTIONS //////////////////////////
+//QUESTION 1
 
-console.log(qOne + rOne);
-let choiceOne = prompt("Votre réponse : ");
-
-if (choiceOne === "A") {
-  console.log(w);
-  score++;
-} else {
+for (let i = 0; i < listQuestion.length; i++) {
   console.log(
-    l + " Réponse : A. Tout le monde le sait qu'elle est plate... \n"
+    "█████████████████████████████╗\n" +
+      `███████ ${listQuestion[i].name} ██████████║: ${listQuestion[i].question}\n` +
+      "█████████████████████████████║\n" +
+      "╚════════════════════════════╝\n"
   );
-}
-
-console.log(qTwo + rTwo);
-let choiceTwo = prompt("Votre réponse : ");
-
-if (choiceTwo === "D") {
-  console.log(w);
-  score++;
-} else {
-  console.log(l + " Réponse : D. Non, mais avec un tubas oui.\n");
-}
-
-console.log(qThree + rThree);
-let choiceThree = prompt("Votre réponse : ");
-
-if (choiceThree === "C") {
-  console.log(w);
-  score++;
-} else {
-  console.log(
-    l + " Réponse C. Vlad est le fils d'un ours. Donc non, c'est un ours. \n"
-  );
-}
-
-console.log(qFour + rFour);
-let choiceFour = prompt("Votre réponse : ");
-
-if (choiceFour === "C") {
-  console.log(w);
-  score++;
-} else {
-  console.log(l + " Réponse D. Bugs Bunny. \n");
-}
-console.log(qFive + rFive);
-let choiceFive = prompt("Votre réponse : ");
-
-if (choiceFive === "B") {
-  console.log(w);
-  score++;
-} else {
-  console.log(
-    l + " Réponse B. Chuck Norris est bien plus chouette qu'une chouette. \n"
-  );
+  for (let j = 0; j < listQuestion[i].possibleResponse.length; j++) {
+    console.log(listQuestion[i].possibleResponse[j]);
+  }
+  console.log("");
+  let choice = prompt("Votre réponse : ");
+  while (!repPoss.includes(choice) && error > 1) {
+    error--;
+    console.log(
+      `Vous devez entrez la lettre A, B, C ou D, en majuscule et sans espace. Plus que ${error} erreurs.`
+    );
+    choice = prompt("Votre nouvelle réponse : ");
+  }
+  if (choice === listQuestion[i].response) {
+    console.log(win);
+    score++;
+  } else {
+    console.log(lose + `La réponse ${listQuestion[i].goodAnswer} \n`);
+  }
+  error = 3;
 }
 
 console.log(
-  ` \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Bravo ou pas bravo, c'est subjectif... En tout cas voilà votre score : ${score} sur 5 questions.`
+  ` \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ Bravo ou pas bravo, c'est subjectif... En tout cas voilà votre score : ${score} . (sur ${listQuestion.length} questions) `
 );
